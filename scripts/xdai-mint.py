@@ -56,6 +56,8 @@ def main():
     USDC = _MintableTestToken("0xDDAfbb505ad214D7b80b1f830fcCc89B60fb7A83", "renERC20")
     USDT = _MintableTestToken("0x4ECaBa5870353805a9F068101A40E0f32ed605C6", "renERC20")
     RAI = _MintableTestToken("0xd7a28aa9c470e7e9d8c676bcd5dd2f40c5683afa", "renERC20")
+    WBTC = _MintableTestToken("0x8e5bBbb09Ed1ebdE8674Cda39A0c169401db4252", "renERC20")
+    WETH = _MintableTestToken("0x6A023CCd1ff6F2045C3309768eAd9E68F978f6e1", "renERC20")
     x3crv = _MintableTestToken("0x1337BedC9D22ecbe766dF105c9623922A27963EC", "CurveLpTokenV5")
 
     # --- FACTORY ---
@@ -75,6 +77,8 @@ def main():
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     RAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
     x3crv._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
 
     # --- FACTORY ---
