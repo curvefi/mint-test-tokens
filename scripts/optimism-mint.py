@@ -24,6 +24,8 @@ class _MintableTestToken(Contract):
     def _mint_for_testing(self, target, amount, kwargs=None):
         if hasattr(self, "l2Bridge"):  # OptimismBridgeToken
             self.mint(target, amount, {"from": self.l2Bridge()})
+        elif hasattr(self, "bridge"):  # OptimismBridgeToken2
+            self.bridgeMint(target, amount, {"from": self.bridge()})
         elif hasattr(self, "mint") and hasattr(self, "owner"):  # renERC20
             self.mint(target, amount, {"from": self.owner()})
         elif hasattr(self, "mint") and hasattr(self, "minter"):  # CurveLpTokenV5
@@ -68,11 +70,15 @@ def main():
     USDT = _MintableTestToken("0x94b008aa00579c1307b0ef2c499ad98a8ce58e58", "OptimismBridgeToken")
     _3crv = _MintableTestToken("0x1337BedC9D22ecbe766dF105c9623922A27963EC", "CurveLpTokenV5")
 
+    wstETH = _MintableTestToken("0x1f32b1c2345538c0c6f582fcb022739c4a194ebb", "OptimismBridgeToken2")
+
     # ------------------------------------------------------------------------------
 
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     _mint_3crv_and_dai(USD_AMOUNT)
+
+    wstETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
 
     # --- FACTORY ---
 

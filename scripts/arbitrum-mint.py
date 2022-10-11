@@ -25,8 +25,10 @@ class _MintableTestToken(Contract):
     def _mint_for_testing(self, target, amount, kwargs=None):
         if self.address == self.wrapped:  # WETH
             self.transfer(target, amount, {"from": "0x0c1cf6883efa1b496b01f654e247b9b419873054"})
-        elif hasattr(self, "bridgeMint"):  # ArbitrumERC20
+        elif hasattr(self, "l2Gateway"):  # ArbitrumERC20
             self.bridgeMint(target, amount, {"from": self.l2Gateway()})
+        elif hasattr(self, "bridge"):  # OptimismBridgeToken2
+            self.bridgeMint(target, amount, {"from": self.bridge()})
         elif hasattr(self, "POOL"):  # AToken
             token = _MintableTestToken(self.UNDERLYING_ASSET_ADDRESS(), "ArbitrumERC20")
             lending_pool = interface.AaveLendingPool(self.POOL())
@@ -79,6 +81,7 @@ def main():
     WBTC = _MintableTestToken("0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f", "ArbitrumERC20")
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
     EURS = _MintableTestToken("0xd22a58f79e9481d1a88e00c343885a588b34b68b", "renERC20")
+    wstETH = _MintableTestToken("0x5979D7b546E38E414F7E9822514be443A4800529", "OptimismBridgeToken2")
 
     # --- FACTORY ---
 
@@ -93,6 +96,7 @@ def main():
     WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     EURS._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 2)
+    wstETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
 
     # Meta
     _mint_2crv_and_usdc(USD_AMOUNT * 2)
