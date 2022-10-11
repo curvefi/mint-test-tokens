@@ -41,6 +41,9 @@ def main():
     USDT = MintableForkToken("0xdac17f958d2ee523a2206206994597c13d831ec7")
     _3Crv = MintableForkToken("0x6c3F90f043a72FA612cbac8115EE7e52BDe6E490")
 
+    # fraxusdc
+    crvFRAX = MintableForkToken("0x3175Df0976dFA876431C2E9eE6Bc45b65d3473CC")
+
     # sbtc
     renBTC = MintableForkToken("0xEB4C2781e4ebA804CE9a9803C67d0893436bB27D")
     WBTC = MintableForkToken("0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599")
@@ -67,25 +70,30 @@ def main():
     # BADGERWBTC-fV2
     BADGER = MintableForkToken("0x3472a5a71965499acd81997a54bba8d852c6e53d")
 
+    # --- Factory crypto meta pools ---
+
+    # DCHF/3CRV (factory-crypto-116)
+    DCHF = MintableForkToken("0x045da4bfe02b320f4403674b3b7d121737727a36")
+
     # ------------------------------------------------------------------------------
 
-    # --- Factory plain pools ---
-
-    # ibEUR+sEUR
-    ibEUR._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 18)
-    sEUR._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 18)
-
-    # D3
-    FRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    FEI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    alUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-
-    # crvCRV
-    CRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
-    yvBOOST._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
-    cvxCRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
-    # sCRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18) Can't mint
-
+    # # --- Factory plain pools ---
+    #
+    # # ibEUR+sEUR
+    # ibEUR._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 18)
+    # sEUR._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 18)
+    #
+    # # D3
+    # FRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # FEI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # alUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    #
+    # # crvCRV
+    # CRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
+    # yvBOOST._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
+    # cvxCRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
+    # # sCRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18) Can't mint
+    #
     # --- Factory base pools ---
 
     # 3pool
@@ -94,32 +102,45 @@ def main():
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     _3Crv._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
 
-    # sbtc
-    renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
-    WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
-    sBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
-    sbtcCrv._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    # fraxusdc
+    FRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    crvFRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
 
-    # --- Factory meta pools ---
+    # # sbtc
+    # renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    # WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    # sBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    # sbtcCrv._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    #
+    # # --- Factory meta pools ---
+    #
+    # # baoUSD-3CRV
+    # BaoUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    #
+    # # ELONXSWAP3CRV
+    # ELONX._mint_for_testing(ADDRESS, USD_AMOUNT)
+    #
+    # # ibbtc/sbtcCRV
+    # wibBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    #
+    # # --- Factory crypto pools ---
+    #
+    # # YFIETH-fV2
+    # WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
+    # YFI._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
+    #
+    # # BADGERWBTC-fV2
+    # BADGER._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    # WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
 
-    # baoUSD-3CRV
-    BaoUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # --- Factory crypto meta pools ---
 
-    # ELONXSWAP3CRV
-    ELONX._mint_for_testing(ADDRESS, USD_AMOUNT)
+    # DCHF/3CRV (factory-crypto-116)
+    DCHF._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
 
-    # ibbtc/sbtcCRV
-    wibBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
-
-    # --- Factory crypto pools ---
-
-    # YFIETH-fV2
-    WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
-    YFI._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
-
-    # BADGERWBTC-fV2
-    BADGER._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
-    WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    # cvxCrv/FraxBP (factory-crypto-97)
+    cvxCRV._mint_for_testing(ADDRESS, CRV_AMOUNT * 10 ** 18)
 
 
 if ADDRESS != accounts[0].address:
