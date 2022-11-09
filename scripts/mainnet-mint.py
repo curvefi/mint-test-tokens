@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from brownie import config, accounts, Contract
+from brownie import config, accounts, interface, Contract
 from brownie_tokens import ERC20, MintableForkToken
 
 config['autofetch_sources'] = True
@@ -79,6 +79,7 @@ def main():
     RAI = MintableForkToken("0x03ab458634910aad20ef5f1c8ee96f1d6ac54919")
     WormholeUST = MintableForkToken("0xa693B19d2931d498c5B318dF961919BB4aee87a5")
     EUROC = MintableForkToken("0x1aBaEA1f7C830bD89Acc67eC4af516284b1bC33c")
+    frxETH = MintableForkToken("0x5E8422345238F34275888049021821E8E08CAa1f")
 
     # Wrapped
     cDAI = MintableForkToken("0x5d3a536E4D6DbD6114cc1Ead35777bAB948E3643")
@@ -109,14 +110,14 @@ def main():
     # ------------------------------------------------------------------------------
 
     CRV._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
-    # CVX._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
-    # DAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    CVX._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
+    DAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     # USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    # sUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    sUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     # WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
-    # sBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    sBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
     # HBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
     # GUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 2)
     # HUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 8)
@@ -125,7 +126,7 @@ def main():
     # LINKUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # mUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # RSV._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    # TBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
+    TBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
     # DUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # pBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 18)
     # BBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
@@ -136,7 +137,7 @@ def main():
     # mint_by_swap(ADDRESS, EURS.address, sEUR.address, 18, "0x0Ce6a5fF5217e38315f87032CF90686C96627CAA", 1, 0, EUR_AMOUNT)
     #
     # sEUR._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 18)
-    # EURT._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 6)
+    EURT._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 6)
     # UST._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # stETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
     # aETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
@@ -146,17 +147,18 @@ def main():
     # PAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # rETH._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # TUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    # FRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    FRAX._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # LUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # BUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # alUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    # MIM._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    MIM._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
-    # XAUt._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 6)
+    XAUt._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 6)
     # SPELL._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # T._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # RAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     # EUROC._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 6)
+    # frxETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
 
     # WormholeUST._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     # mint_by_swap(ADDRESS, WormholeUST.address, USDC.address, 6, "0x4e0915C88bC70750D68C481540F081fEFaF22273", 0, 2, USD_AMOUNT)
@@ -184,7 +186,7 @@ def main():
     # aSUSD._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     #
     # # Meta
-    # _3Crv._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
+    _3Crv._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
     # crvRenWSBTC._mint_for_testing(ADDRESS, 1000 * 10 ** 18)
 
     if ADDRESS != accounts[0].address:
