@@ -27,6 +27,8 @@ class _MintableTestToken(Contract):
             self.transfer(target, amount, {"from": "0x0c1cf6883efa1b496b01f654e247b9b419873054"})
         elif hasattr(self, "l2Gateway"):  # ArbitrumERC20
             self.bridgeMint(target, amount, {"from": self.l2Gateway()})
+        elif hasattr(self, "gatewayAddress"):  # ArbitrumUSDC
+            self.bridgeMint(target, amount, {"from": self.gatewayAddress()})
         elif hasattr(self, "bridge"):  # OptimismBridgeToken2
             self.bridgeMint(target, amount, {"from": self.bridge()})
         elif hasattr(self, "POOL"):  # AToken
@@ -42,17 +44,20 @@ class _MintableTestToken(Contract):
             raise ValueError("Unsupported Token")
 
 
-def _mint_2crv_and_usdc(amount):
+def _mint_2crv(amount):
     USDT = _MintableTestToken("0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "ArbitrumERC20")
-    USDT._mint_for_testing(ADDRESS, amount * 10 ** 6)
+    USDT._mint_for_testing(ADDRESS, amount // 2 * 10 ** 6)
+
+    USDC = _MintableTestToken("0xff970a61a04b1ca14834a43f5de4533ebddb5cc8", "ArbitrumUSDC")
+    USDC._mint_for_testing(ADDRESS, amount // 2 * 10 ** 6)
 
     pool_address = "0x7f90122bf0700f9e7e1f688fe926940e8839f353"
     USDT.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
+    USDC.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
 
     pool_abi = getattr(interface, "CurveRenPool").abi
     pool = Contract.from_abi("CurveRenPool", pool_address, pool_abi)
-    pool.add_liquidity([0, amount * 10 ** 6], 0, {'from': ADDRESS})  # mint 2CRV
-    pool.remove_liquidity_one_coin(amount // 2 * 10 ** 18, 0, 0, {'from': ADDRESS})  # mint USDC
+    pool.add_liquidity([amount // 2 * 10 ** 6, amount // 2 * 10 ** 6], 0, {'from': ADDRESS})  # mint 2CRV
 
 
 def _mint_deETH(address):
@@ -78,6 +83,7 @@ def _mint_aArbDAI(aarbusdt_amount):
 def main():
     WETH = _MintableTestToken("0x82aF49447D8a07e3bd95BD0d56f35241523fBab1", "WETH")
     USDT = _MintableTestToken("0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9", "ArbitrumERC20")
+    USDC = _MintableTestToken("0xff970a61a04b1ca14834a43f5de4533ebddb5cc8", "ArbitrumUSDC")
     WBTC = _MintableTestToken("0x2f2a2543b76a4166549f7aab2e75bef0aefc5b0f", "ArbitrumERC20")
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
     EURS = _MintableTestToken("0xd22a58f79e9481d1a88e00c343885a588b34b68b", "renERC20")
@@ -93,13 +99,14 @@ def main():
 
     WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
     USDT._mint_for_testing(ADDRESS, 3 * USD_AMOUNT * 10 ** 6)
+    USDC._mint_for_testing(ADDRESS, 3 * USD_AMOUNT * 10 ** 6)
     WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     EURS._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 2)
     wstETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
 
     # Meta
-    _mint_2crv_and_usdc(USD_AMOUNT * 2)
+    _mint_2crv(USD_AMOUNT)
 
     # --- FACTORY ---
 
