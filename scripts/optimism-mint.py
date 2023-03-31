@@ -22,7 +22,9 @@ class _MintableTestToken(Contract):
         super().__init__(address)
 
     def _mint_for_testing(self, target, amount, kwargs=None):
-        if hasattr(self, "l2Bridge"):  # OptimismBridgeToken
+        if self.address.lower() == "0xda10009cbd5d07dd0cecc66161fc93d7c9000da1".lower():  # DAI
+            self.transfer(target, amount, {"from": "0xd08cd45925132537ea241179b19ab3a33ad97f3d"})
+        elif hasattr(self, "l2Bridge"):  # OptimismBridgeToken
             self.mint(target, amount, {"from": self.l2Bridge()})
         elif hasattr(self, "bridge"):  # OptimismBridgeToken2
             self.bridgeMint(target, amount, {"from": self.bridge()})
@@ -34,9 +36,9 @@ class _MintableTestToken(Contract):
             raise ValueError("Unsupported Token")
 
 
-def _mint_3crv_and_dai(amount):
+def _mint_3crv(amount):
     USDC = _MintableTestToken("0x7f5c764cbc14f9669b88837ca1490cca17c31607", "OptimismBridgeToken")
-    USDC._mint_for_testing(ADDRESS, 2 * amount * 10 ** 6)
+    USDC._mint_for_testing(ADDRESS, amount * 10 ** 6)
 
     pool_address = "0x1337BedC9D22ecbe766dF105c9623922A27963EC"
     USDC.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
@@ -44,7 +46,6 @@ def _mint_3crv_and_dai(amount):
     pool_abi = getattr(interface, "CurvePool").abi
     pool = Contract.from_abi("CurvePool", pool_address, pool_abi)
     pool.add_liquidity([0, 2 * amount * 10 ** 6, 0], 0, {'from': ADDRESS})  # mint 3CRV
-    pool.remove_liquidity_one_coin(amount * 10 ** 18, 0, 0, {'from': ADDRESS})  # mint DAI
 
 
 def _mint_by_swap(pool_address, token_to_swap, address, amount, i, j):
@@ -66,6 +67,7 @@ def _mint_by_swap_eth(pool_address, address, amount, i, j):
 
 
 def main():
+    DAI = _MintableTestToken("0xda10009cbd5d07dd0cecc66161fc93d7c9000da1", "OptimismBridgeToken")
     USDC = _MintableTestToken("0x7f5c764cbc14f9669b88837ca1490cca17c31607", "OptimismBridgeToken")
     USDT = _MintableTestToken("0x94b008aa00579c1307b0ef2c499ad98a8ce58e58", "OptimismBridgeToken")
     _3crv = _MintableTestToken("0x1337BedC9D22ecbe766dF105c9623922A27963EC", "CurveLpTokenV5")
@@ -74,9 +76,10 @@ def main():
 
     # ------------------------------------------------------------------------------
 
+    DAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    _mint_3crv_and_dai(USD_AMOUNT)
+    _mint_3crv(USD_AMOUNT)
 
     wstETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
 
