@@ -15,6 +15,7 @@ ADDRESS = accounts[0].address
 
 class _MintableTestToken(Contract):
     WAVAX = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+    USDCT = ["0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E".lower(), "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7".lower()]
 
     def __init__(self, address, interface_name):
         abi = getattr(interface, interface_name).abi
@@ -26,6 +27,8 @@ class _MintableTestToken(Contract):
         if self.address.lower() == self.WAVAX.lower():  # WAVAX
             # Wrapped Avax, send from Iron Bank
             self.transfer(target, amount, {"from": "0xb3c68d69e95b095ab4b33b4cb67dbc0fbf3edf56"})
+        elif self.address.lower() in self.USDCT:  # USDC, USDt
+            self.transfer(target, amount, {"from": "0x9f8c163cba728e99993abe7495f06c0a3c8ac8b9"})  # Binance: C-Chain Hot Wallet
         elif hasattr(self, "POOL"):  # AToken
             token = _MintableTestToken(self.UNDERLYING_ASSET_ADDRESS(), "AvalancheERC20")
             lending_pool = interface.AaveLendingPool(self.POOL())
@@ -43,9 +46,11 @@ class _MintableTestToken(Contract):
 
 
 def main():
-    DAI = _MintableTestToken("0xd586E7F844cEa2F87f50152665BCbc2C279D8d70", "AvalancheERC20")
-    USDC = _MintableTestToken("0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664", "AvalancheERC20")
-    USDT = _MintableTestToken("0xc7198437980c041c805A1EDcbA50c1Ce5db95118", "AvalancheERC20")
+    DAIe = _MintableTestToken("0xd586E7F844cEa2F87f50152665BCbc2C279D8d70", "AvalancheERC20")
+    USDCe = _MintableTestToken("0xA7D7079b0FEaD91F3e65f86E8915Cb59c1a4C664", "AvalancheERC20")
+    USDTe = _MintableTestToken("0xc7198437980c041c805A1EDcbA50c1Ce5db95118", "AvalancheERC20")
+    USDC = _MintableTestToken("0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E", "AvalancheERC20")
+    USDt = _MintableTestToken("0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7", "AvalancheERC20")
     WETH = _MintableTestToken("0x49D5c2BdFfac6CE2BFdB6640F4F80f226bc10bAB", "AvalancheERC20")
     WBTC = _MintableTestToken("0x50b7545627a5162F82A992c33b87aDc75187B218", "AvalancheERC20")
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
@@ -54,28 +59,35 @@ def main():
     avDAI = _MintableTestToken("0x47AFa96Cdc9fAb46904A55a6ad4bf6660B53c38a", "AToken")
     avUSDC = _MintableTestToken("0x46A51127C3ce23fb7AB1DE06226147F446e4a857", "AToken")
     avUSDT = _MintableTestToken("0x532E6537FEA298397212F09A61e03311686f548e", "AToken")
+    aAvaDAI = _MintableTestToken("0x82E64f49Ed5EC1bC6e43DAD4FC8Af9bb3A2312EE", "AToken")
+    aAvaUSDC = _MintableTestToken("0x625E7708f30cA75bfd92586e17077590C60eb4cD", "AToken")
+    aAvaUSDT = _MintableTestToken("0x6ab707Aca953eDAeFBc4fD23bA73294241490620", "AToken")
     avWBTC = _MintableTestToken("0x686bEF2417b6Dc32C50a3cBfbCC3bb60E1e9a15D", "AToken")
-
     # Meta
     av3Crv = _MintableTestToken("0x1337BedC9D22ecbe766dF105c9623922A27963EC", "CurveLpTokenV5")
 
     # ------------------------------------------------------------------------------
 
-    DAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    DAIe._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # USDCe._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    # USDTe._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    WETH._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
-    renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    USDt._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    # WETH._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    # renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
 
     # Wrapped
-    avDAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
-    avUSDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    avUSDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
-    avWBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
+    # avDAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    # avUSDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    # avUSDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    aAvaDAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    aAvaUSDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    aAvaUSDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
+    # avWBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
 
     # Meta
-    av3Crv._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
+    # av3Crv._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
 
     if ADDRESS != accounts[0].address:
         accounts[0].transfer(ADDRESS, "100 ether")

@@ -15,6 +15,7 @@ ADDRESS = accounts[0].address
 
 class _MintableTestToken(Contract):
     WAVAX = "0xB31f66AA3C1e785363F0875A1B74E27b85FD66c7"
+    USDCT = ["0xB97EF9Ef8734C71904D8002F8b6Bc66Dd9c48a6E".lower(), "0x9702230A8Ea53601f5cD2dc00fDBc13d4dF4A8c7".lower()]
 
     def __init__(self, address, interface_name):
         abi = getattr(interface, interface_name).abi
@@ -26,6 +27,8 @@ class _MintableTestToken(Contract):
         if self.address.lower() == self.WAVAX.lower():  # WAVAX
             # Wrapped Avax, send from Iron Bank
             self.transfer(target, amount, {"from": "0xb3c68d69e95b095ab4b33b4cb67dbc0fbf3edf56"})
+        elif self.address.lower() in self.USDCT:  # USDC, USDt
+            self.transfer(target, amount, {"from": "0x9f8c163cba728e99993abe7495f06c0a3c8ac8b9"})  # Binance: C-Chain Hot Wallet
         elif hasattr(self, "POOL"):  # AToken
             token = _MintableTestToken(self.UNDERLYING_ASSET_ADDRESS(), "AvalancheERC20")
             lending_pool = interface.AaveLendingPool(self.POOL())
@@ -62,7 +65,7 @@ def main():
 
     # Factory
     # MIM = _MintableTestToken("0x130966628846bfd36ff31a822705796e8cb8c18d", "CurveLpTokenV5")
-    # USDC = _MintableTestToken("0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e", "AvalancheERC20")
+    USDC = _MintableTestToken("0xb97ef9ef8734c71904d8002f8b6bc66dd9c48a6e", "AvalancheERC20")
 
 
     # ------------------------------------------------------------------------------
@@ -77,8 +80,7 @@ def main():
     # Factory
     mim_pool_address = "0x30df229cefa463e991e29d42db0bae2e122b2ac7"
     _mint_by_swap(mim_pool_address, av3Crv, ADDRESS, USD_AMOUNT * 10 ** 18, 1, 0)  # MIM
-    usdc_pool_address = "0x3a43a5851a3e3e0e25a3c1089670269786be1577"
-    _mint_by_swap(usdc_pool_address, USDCe, ADDRESS, USD_AMOUNT * 10 ** 6, 0, 1)  # USDC
+    USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
 
 
     if ADDRESS != accounts[0].address:
