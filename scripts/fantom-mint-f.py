@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 
-from brownie import config, accounts, Contract, interface, ZERO_ADDRESS
+from brownie import config, accounts, Contract, interface
 from brownie.convert import to_bytes
 
 config['autofetch_sources'] = True
@@ -27,6 +27,20 @@ class _MintableTestToken(Contract):
         if self.address == self.wrapped:
             # Wrapped Fantom, send from SpookySwap
             self.transfer(target, amount, {"from": "0x2a651563c9d3af67ae0388a5c8f89b867038089e"})
+        elif self.address.lower() == "0x27e611fd27b276acbd5ffd632e5eaebec9761e40".lower():  # 2pool LP
+            amount = amount // 10 ** 18
+            DAI = _MintableTestToken("0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e", "AnyswapERC20")
+            USDC = _MintableTestToken("0x04068da6c83afcfa0e13ba15a6696662335d5b75", "AnyswapERC20")
+            DAI._mint_for_testing(ADDRESS, (amount // 2) * 10 ** 18)
+            USDC._mint_for_testing(ADDRESS, (amount // 2) * 10 ** 6)
+
+            pool_address = "0x27e611fd27b276acbd5ffd632e5eaebec9761e40"
+            DAI.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
+            USDC.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
+
+            pool_abi = getattr(interface, "CurveRenPool").abi
+            pool = Contract.from_abi("CurveRenPool", pool_address, pool_abi)
+            pool.add_liquidity([(amount // 2) * 10 ** 18, (amount // 2) * 10 ** 6], 0, {'from': ADDRESS})
         elif hasattr(self, "Swapin"):  # AnyswapERC20
             tx_hash = to_bytes("0x4475636b204475636b20476f6f7365")
             self.Swapin(tx_hash, target, amount, {"from": self.owner()})
@@ -36,21 +50,6 @@ class _MintableTestToken(Contract):
             self.mint(target, amount, {"from": self.minter()})
         else:
             raise ValueError("Unsupported Token")
-
-
-def _mint_2pool(amount):
-    DAI = _MintableTestToken("0x8d11ec38a3eb5e956b052f67da8bdc9bef8abf3e", "AnyswapERC20")
-    USDC = _MintableTestToken("0x04068da6c83afcfa0e13ba15a6696662335d5b75", "AnyswapERC20")
-    DAI._mint_for_testing(ADDRESS, (amount // 2) * 10 ** 18)
-    USDC._mint_for_testing(ADDRESS, (amount // 2) * 10 ** 6)
-
-    pool_address = "0x27e611fd27b276acbd5ffd632e5eaebec9761e40"
-    DAI.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
-    USDC.approve(pool_address, 2 ** 256 - 1, {'from': ADDRESS})
-
-    pool_abi = getattr(interface, "CurveRenPool").abi
-    pool = Contract.from_abi("CurveRenPool", pool_address, pool_abi)
-    pool.add_liquidity([(amount // 2) * 10 ** 18, (amount // 2) * 10 ** 6], 0, {'from': ADDRESS})
 
 
 def _mint_by_swap(pool_address, token_to_swap, address, amount, i, j):
@@ -88,6 +87,8 @@ def main():
     ETH = _MintableTestToken("0x74b23882a30290451A17c44f4F05243b6b58C76d", "AnyswapERC20")
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
 
+    _2crv = _MintableTestToken("0x27e611fd27b276acbd5ffd632e5eaebec9761e40", "CurveLpTokenV5")
+
     # ------------------------------------------------------------------------------
 
     # 3poolV2 (factory-v2-1)
@@ -106,7 +107,7 @@ def main():
     # # USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
 
     # FRAX2pool (factory-v2-16)
-    _mint_2pool(USD_AMOUNT * 2)
+    _2crv._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     FRAX2pool_address = "0x7a656b342e14f745e2b164890e88017e27ae7320"
     _mint_by_swap(FRAX2pool_address, _2crv, ADDRESS, USD_AMOUNT * 10 ** 18, 1, 0)  # FRAX
 
