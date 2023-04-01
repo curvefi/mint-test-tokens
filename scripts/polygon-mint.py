@@ -15,6 +15,8 @@ ADDRESS = accounts[0].address
 
 
 class _MintableTestToken(Contract):
+    WMATIC = "0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270"
+
     def __init__(self, address, interface_name):
         abi = getattr(interface, interface_name).abi
         self.from_abi("PolygonToken", address, abi)
@@ -22,7 +24,9 @@ class _MintableTestToken(Contract):
         super().__init__(address)
 
     def _mint_for_testing(self, target, amount, kwargs=None):
-        if hasattr(self, "getRoleMember"):  # BridgeToken
+        if self.address.lower() == self.WMATIC.lower():  # WMATIC
+            self.transfer(target, amount, {"from": "0xadbf1854e5883eb8aa7baf50705338739e558e5b"})
+        elif hasattr(self, "getRoleMember"):  # BridgeToken
             role = "0x8f4f2da22e8ac8f11e15f9fc141cddbb5deea8800186560abb6e68c5496619a9"
             minter = self.getRoleMember(role, 0)
             amount = to_bytes(amount, "bytes32")
@@ -67,6 +71,7 @@ def main():
     WBTC = _MintableTestToken("0x1BFD67037B42Cf73acF2047067bd4F2C47D9BfD6", "BridgeToken")
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
     EURS = _MintableTestToken("0xe111178a87a3bff0c8d18decba5798827539ae99", "BridgeToken")
+    WMATIC = _MintableTestToken("0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", "WETH")
 
     # Wrapped
     amDAI = _MintableTestToken("0x27F8D03b3a2196956ED754baDc28D73be8830A6e", "AToken")
@@ -79,7 +84,7 @@ def main():
 
     # ------------------------------------------------------------------------------
 
-    # CRV._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
+    CRV._mint_for_testing(ADDRESS, 100000 * 10 ** 18)
     DAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
@@ -88,6 +93,7 @@ def main():
     WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     # renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     # EURS._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 2)
+    WMATIC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
 
     # Wrapped
     # amDAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
