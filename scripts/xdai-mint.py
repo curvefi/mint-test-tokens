@@ -25,7 +25,7 @@ class _MintableTestToken(Contract):
 
     def _mint_for_testing(self, target, amount, kwargs=None):
         if self.address.lower() == self.wrapped:  # WXDAI
-            self.transfer(target, amount, {"from": "0xe91D153E0b41518A2Ce8Dd3D7944Fa863463a97d"})
+            self.transfer(target, amount, {"from": "0xd4e420bBf00b0F409188b338c5D87Df761d6C894"})  # Agave interest bearing WXDAI (agWXDAI)
         elif hasattr(self, "mint") and hasattr(self, "owner"):  # renERC20
             self.mint(target, amount, {"from": self.owner()})
         elif hasattr(self, "mint") and hasattr(self, "minter"):  # CurveLpTokenV5
