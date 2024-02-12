@@ -5,6 +5,7 @@ from brownie.convert import to_bytes
 
 config['autofetch_sources'] = True
 
+SDT_AMOUNT = 100000
 USD_AMOUNT = 10000
 EUR_AMOUNT = 100
 ETH_AMOUNT = 100
@@ -72,6 +73,7 @@ def main():
     renBTC = _MintableTestToken("0xDBf31dF14B66535aF65AaC99C32e9eA844e14501", "renERC20")
     EURS = _MintableTestToken("0xe111178a87a3bff0c8d18decba5798827539ae99", "BridgeToken")
     WMATIC = _MintableTestToken("0x0d500B1d8E8eF31E21C99d1Db9A6444d3ADf1270", "WETH")
+    SDT = _MintableTestToken("0x361a5a4993493ce00f61c32d4ecca5512b82ce90", "BridgeToken")
 
     # Wrapped
     amDAI = _MintableTestToken("0x27F8D03b3a2196956ED754baDc28D73be8830A6e", "AToken")
@@ -89,11 +91,12 @@ def main():
     USDC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     USDT._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 6)
     # EURT._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 6)
-    WETH._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    WETH._mint_for_testing(ADDRESS, ETH_AMOUNT * 10 ** 18)
     WBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     # renBTC._mint_for_testing(ADDRESS, BTC_AMOUNT * 10 ** 8)
     # EURS._mint_for_testing(ADDRESS, EUR_AMOUNT * 10 ** 2)
     WMATIC._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
+    SDT._mint_for_testing(ADDRESS, SDT_AMOUNT * 10 ** 18)
 
     # Wrapped
     # amDAI._mint_for_testing(ADDRESS, USD_AMOUNT * 10 ** 18)
